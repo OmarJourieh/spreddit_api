@@ -19,7 +19,7 @@ class Usercontroller extends Controller
         //
     }
     public function adduser(Request $request){
-        
+
         if($request->hasFile('image')){
             $file=$request->image;
             $new_file=time().$file->getClientOriginalName();
@@ -28,18 +28,18 @@ class Usercontroller extends Controller
         User::create([
             'id'=>$request->id,
             'username'=>$request->username,
-            'address' => $request->address,      
+            'address' => $request->address,
             'phone'=>$request->phone,
             'email'=>$request->email,
             'password'=>$request->password,
             'isAdmin'=>false,
             'image'=>'/storage/user/'.$new_file,
-            
+
 
         ]);
         return true;
     }
-    
+
     public function addadmin(Request $request){
         if($request->hasFile('image')){
             $file=$request->image;
@@ -49,20 +49,20 @@ class Usercontroller extends Controller
         User::create([
             'id'=>$request->id,
             'username'=>$request->username,
-            'address' => $request->address,      
+            'address' => $request->address,
             'phone'=>$request->phone,
             'email'=>$request->email,
             'password'=>$request->password,
             'isAdmin'=>true,
             'image'=>'/storage/user/'.$new_file,
-            
+
 
         ]);
         return true;
     }
     public function getallusers(){
         return User::all();
-        
+
     }
     public function login(Request $request){
         foreach(User::all() as $y){
@@ -74,13 +74,25 @@ class Usercontroller extends Controller
     }
     public function getuserbyid($id){
         return User::find($id);
-        
+
     }
-    public function updatedatauser(Request $request,$id){
+    public function updatedatauser(Request $request, $id){
         $r=User::find($id);
+        if($file = $request->hasFile('image')) {
+            $file = $request->image;
+            $new_file = time().$file->getClientOriginalName();
+            $path = $file->storeAs('/img', $new_file);
+
+
+            $r->image = '/img/'. $new_file;
+        }
+
         $r->username=$request->name;
-        $r->id=$request->id;
-    $r->save();
+        $r->email=$request->email;
+        $r->address=$request->address;
+        $r->phone=$request->phone;
+        // $r->id=$request->id;
+        $r->save();
         return $r;
 
     }
@@ -89,7 +101,7 @@ class Usercontroller extends Controller
         User::find($id)->delete();
     }
 
-   
+
     public function blockuser(Request $request)
     {
         Block::create(
@@ -125,7 +137,7 @@ class Usercontroller extends Controller
     public function rateuser(Request $request) {
         Rate::create([
             'rater_id' => $request->rater_id,
-            'rated_id' => $request->rated_id,  
+            'rated_id' => $request->rated_id,
             'rate' => $request->rate,
         ]);
     }
@@ -145,5 +157,5 @@ class Usercontroller extends Controller
         $count =  $data->count();
         return round($o/$count, 1);
     }
-   
+
 }

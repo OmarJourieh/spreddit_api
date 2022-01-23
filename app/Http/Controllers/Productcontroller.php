@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\Favorite;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -99,7 +100,9 @@ class Productcontroller extends Controller
     }
     public function getproductbyid($id){
         $p = Product::find($id);
+        $category = Category::find($p->category_id);
         $p['user'] = $p->user;
+        $p['category'] = $category;
         return $p;
     }
 

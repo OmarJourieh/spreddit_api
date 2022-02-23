@@ -134,20 +134,24 @@ class Usercontroller extends Controller
     }
 
 
-    public function rateuser(Request $request) {
+    public function rateuser($rater_id, $rated_id, $rate) {
         Rate::create([
-            'rater_id' => $request->rater_id,
-            'rated_id' => $request->rated_id,
-            'rate' => $request->rate,
+            'rater_id' => $rater_id,
+            'rated_id' => $rated_id,
+            'rate' => $rate,
         ]);
     }
 
-    public function getgivenrate(Request $request) {
-        return Rate::where('rater_id', $request->rater_id)->where('rated_id', $request->rated_id)->get()[0]['rate'];
+    public function getgivenrate($rater_id, $rated_id) {
+        $rate = Rate::where('rater_id', $rater_id)->where('rated_id', $rated_id)->get();
+        $hasRate = Rate::where('rater_id', $rater_id)->where('rated_id', $rated_id)->get()->count();
+        if($hasRate == 0) {
+            return 0;
+        }
+        return $rate;
     }
 
-    public function getaveragerate(Request $request) {
-        $rated_id = $request->rated_id;
+    public function getaveragerate($rated_id) {
         $data = Rate::where('rated_id', $rated_id)->get();
         $o=0;
         foreach ($data as $key) {
@@ -155,6 +159,9 @@ class Usercontroller extends Controller
             # code...
         }
         $count =  $data->count();
+        if($count == 0) {
+            return 0;
+        }
         return round($o/$count, 1);
     }
 

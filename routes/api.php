@@ -108,9 +108,9 @@ Route::get('/r',function(Request $request){
     echo "any thing";
 })->middleware(r::class);
 
-Route::post('/rateuser',[Usercontroller::class,'rateuser']);
-Route::post('/getgivenrate',[Usercontroller::class,'getgivenrate']);
-Route::post('/getaveragerate',[Usercontroller::class,'getaveragerate']);
+Route::get('/rateuser/{rater_id}/{rated_id}/{rate}',[Usercontroller::class,'rateuser']);
+Route::get('/getgivenrate/{rater_id}/{rated_id}',[Usercontroller::class,'getgivenrate']);
+Route::get('/getaveragerate/{rated_id}',[Usercontroller::class,'getaveragerate']);
 
 //message
 Route::post('/sendmessage',[MessagesController::class,'sendmessage']);
